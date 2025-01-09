@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Firewall Blocker - Modify/Delete</title>
+    <title>IPGuard</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
@@ -122,7 +122,7 @@
 <body>
 
 <div class="container">
-    <h1>Firewall Blocker - Manage IPs & URLs</h1>
+    <h1>IPGuard</h1>
 
     <div class="tabs">
         <button class="tab-button active" onclick="openTab('ip-tab',event)">Block IP Addresses</button>
@@ -162,7 +162,7 @@
         <h2>Block URLs</h2>
         <form id="block-url-form" action="block_addresses.php" method="POST" enctype="multipart/form-data">
             <label for="urls">Enter URLs (comma-separated):</label>
-            <textarea name="urls" id="urls" placeholder="e.g., https://example.com, http://test.com"></textarea>
+            <textarea name="urls" id="urls" placeholder="e.g., example.com, test.com"></textarea>
             <label for="url_file">Or upload a file (CSV or TXT):</label>
             <input type="file" name="url_file" id="url_file" accept=".txt, .csv">
             <input type="submit" value="Block URLs">
@@ -320,6 +320,7 @@
                 };
                 reader.readAsText(ipFile);
             }
+            ipForm.reset();
         })
         .catch(error => {
             console.error("Error blocking IPs:", error);
@@ -375,6 +376,9 @@
                 };
                 reader.readAsText(urlFile);
             }
+
+            urlForm.reset();
+
         })
         .catch(error => {
             console.error("Error blocking URLs:", error);
