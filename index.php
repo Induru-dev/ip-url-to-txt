@@ -125,8 +125,8 @@
     <h1>Firewall Blocker - Manage IPs & URLs</h1>
 
     <div class="tabs">
-        <button class="tab-button active" onclick="openTab('ip-tab')">Block IP Addresses</button>
-        <button class="tab-button" onclick="openTab('url-tab')">Block URLs</button>
+        <button class="tab-button active" onclick="openTab('ip-tab',event)">Block IP Addresses</button>
+        <button class="tab-button" onclick="openTab('url-tab',event)">Block URLs</button>
     </div>
 
     <div id="ip-tab" class="tab-content active">
@@ -147,7 +147,7 @@
                 if (file_exists($ip_file)) {
                     $ips = file($ip_file, FILE_IGNORE_NEW_LINES);
                     foreach ($ips as $ip) {
-                        echo "<tr>
+                        echo "<tr id=\"ip-row-$ip\">
                                 <td><input type='text' value='$ip' disabled></td>
                                 <td><button onclick='deleteIp(\"$ip\")'>Delete</button></td>
                             </tr>";
@@ -177,7 +177,7 @@
                 if (file_exists($url_file)) {
                     $urls = file($url_file, FILE_IGNORE_NEW_LINES);
                     foreach ($urls as $url) {
-                        echo "<tr>
+                        echo "<tr id=\"url-row-$url\">
                                 <td><input type='text' value='$url' disabled></td>
                                 <td><button onclick='deleteUrl(\"$url\")'>Delete</button></td>
                             </tr>";
@@ -197,8 +197,9 @@
     </div>
 </div>
 
+
 <script>
-    function openTab(tabId) {
+    function openTab(tabId, event) {
         let tabs = document.querySelectorAll('.tab-content');
         tabs.forEach(function(tab) {
             tab.classList.remove('active');
@@ -214,57 +215,57 @@
     }
 
     function deleteIp(ip) {
-    if (confirm('Are you sure you want to delete this IP address?')) {
-        // Perform the AJAX request to delete the IP
-        const url = `block_addresses.php?delete_ip=${encodeURIComponent(ip)}`;
-        
-        fetch(url, {
-            method: 'GET',  // Using GET to send the deletion request
-        })
-        .then(response => response.text())
-        .then(data => {
-            // You could display a success message or dynamically update your page here.
-            alert("IP deleted successfully!");
-            console.log(data);  // Log the response (could show a success message)
+        if (confirm('Are you sure you want to delete this IP address?')) {
+            // Perform the AJAX request to delete the IP
+            const url = `block_addresses.php?delete_ip=${encodeURIComponent(ip)}`;
+            
+            fetch(url, {
+                method: 'GET',  // Using GET to send the deletion request
+            })
+            .then(response => response.text())
+            .then(data => {
+                // You could display a success message or dynamically update your page here.
+                alert("IP deleted successfully!");
+                console.log(data);  // Log the response (could show a success message)
 
-            // Example: Optionally remove the element from the page (update UI immediately)
-            const ipRow = document.getElementById(`ip-row-${ip}`);
-            if (ipRow) {
-                ipRow.remove();  // Remove the row of IP immediately from the DOM
-            }
-        })
-        .catch(error => {
-            alert("Failed to delete IP. Please try again.");
-            console.error("Error:", error);
-        });
-    }
+                // Example: Optionally remove the element from the page (update UI immediately)
+                const ipRow = document.getElementById(`ip-row-${ip}`);
+                if (ipRow) {
+                    ipRow.remove();  // Remove the row of IP immediately from the DOM
+                }
+            })
+            .catch(error => {
+                alert("Failed to delete IP. Please try again.");
+                console.error("Error:", error);
+            });
+        }
     }
 
     function deleteUrl(url) {
-    if (confirm('Are you sure you want to delete this URL?')) {
-        // Perform the AJAX request to delete the URL
-        const deleteUrl = `block_addresses.php?delete_url=${encodeURIComponent(url)}`;
-        
-        fetch(deleteUrl, {
-            method: 'GET',  // Using GET to send the deletion request
-        })
-        .then(response => response.text())
-        .then(data => {
-            // You could display a success message or dynamically update your page here.
-            alert("URL deleted successfully!");
-            console.log(data);  // Log the response (could show a success message)
+        if (confirm('Are you sure you want to delete this URL?')) {
+            // Perform the AJAX request to delete the URL
+            const deleteUrl = `block_addresses.php?delete_url=${encodeURIComponent(url)}`;
+            
+            fetch(deleteUrl, {
+                method: 'GET',  // Using GET to send the deletion request
+            })
+            .then(response => response.text())
+            .then(data => {
+                // You could display a success message or dynamically update your page here.
+                alert("URL deleted successfully!");
+                console.log(data);  // Log the response (could show a success message)
 
-            // Example: Optionally remove the element from the page (update UI immediately)
-            const urlRow = document.getElementById(`url-row-${url}`);
-            if (urlRow) {
-                urlRow.remove();  // Remove the URL row immediately from the DOM
-            }
-        })
-        .catch(error => {
-            alert("Failed to delete URL. Please try again.");
-            console.error("Error:", error);
-        });
-    }
+                // Example: Optionally remove the element from the page (update UI immediately)
+                const urlRow = document.getElementById(`url-row-${url}`);
+                if (urlRow) {
+                    urlRow.remove();  // Remove the URL row immediately from the DOM
+                }
+            })
+            .catch(error => {
+                alert("Failed to delete URL. Please try again.");
+                console.error("Error:", error);
+            });
+        }
     }
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -275,15 +276,30 @@
         ipForm.addEventListener("submit", function (event) {
             event.preventDefault(); // Prevent the default form submission
 
-            const formData = new FormData(ipForm);
+            const formData = new FormData(ipForm); // Collect form data
+
             fetch("block_addresses.php", {
                 method: "POST",
-                body: formData
+                body: formData,
             })
-            .then(response => response.text())
+            .then(response => response.text()) // Read response text
             .then(data => {
                 alert("IPs blocked successfully.");
                 console.log(data); // Optional: Show response for debugging
+                // Optionally update the page without reloading
+
+                // Update the IP list dynamically
+                const ipList = document.getElementById("ip-list");
+                const newIps = formData.get("ip_addresses").split(",");
+                newIps.forEach(ip => {
+                    const newRow = document.createElement("tr");
+                    newRow.id = `ip-row-${ip.trim()}`;
+                    newRow.innerHTML = `
+                        <td><input type='text' value='${ip.trim()}' disabled></td>
+                        <td><button onclick='deleteIp("${ip.trim()}")'>Delete</button></td>
+                    `;
+                    ipList.appendChild(newRow);
+                });
             })
             .catch(error => {
                 console.error("Error blocking IPs:", error);
@@ -295,26 +311,37 @@
         urlForm.addEventListener("submit", function (event) {
             event.preventDefault(); // Prevent the default form submission
 
-            const formData = new FormData(urlForm);
+            const formData = new FormData(urlForm); // Collect form data
+
             fetch("block_addresses.php", {
                 method: "POST",
-                body: formData
+                body: formData,
             })
-            .then(response => response.text())
+            .then(response => response.text()) // Read response text
             .then(data => {
                 alert("URLs blocked successfully.");
                 console.log(data); // Optional: Show response for debugging
+                // Optionally update the page without reloading
+
+                // Update the URL list dynamically
+                const urlList = document.getElementById("url-list");
+                const newUrls = formData.get("urls").split(",");
+                newUrls.forEach(url => {
+                    const newRow = document.createElement("tr");
+                    newRow.id = `url-row-${url.trim()}`;
+                    newRow.innerHTML = `
+                        <td><input type='text' value='${url.trim()}' disabled></td>
+                        <td><button onclick='deleteUrl("${url.trim()}")'>Delete</button></td>
+                    `;
+                    urlList.appendChild(newRow);
+                });
             })
             .catch(error => {
                 console.error("Error blocking URLs:", error);
                 alert("Failed to block URLs. Please try again.");
             });
         });
-    })
-
-
-
-
+    });
 </script>
 
 </body>

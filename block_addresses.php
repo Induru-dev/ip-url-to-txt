@@ -61,12 +61,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 if (isset($_GET['delete_ip'])) {
     $ip_to_delete = $_GET['delete_ip'];
     delete_from_file('ip_addresses.txt', $ip_to_delete);
+    echo "IP {$ip_to_delete} deleted successfully.";
     header("Location: index.php");
 }
 
 if (isset($_GET['delete_url'])) {
     $url_to_delete = $_GET['delete_url'];
     delete_from_file('urls.txt', $url_to_delete);
+    echo "URL {$url_to_delete} deleted successfully.";
     header("Location: index.php");
 }
 
