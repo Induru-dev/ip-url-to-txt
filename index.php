@@ -269,79 +269,120 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-        const ipForm = document.getElementById("block-ip-form");
-        const urlForm = document.getElementById("block-url-form");
+    const ipForm = document.getElementById("block-ip-form");
+    const urlForm = document.getElementById("block-url-form");
 
-        // Handle IP blocking form submission
-        ipForm.addEventListener("submit", function (event) {
-            event.preventDefault(); // Prevent the default form submission
+    // Handle IP blocking form submission
+    ipForm.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent the default form submission
 
-            const formData = new FormData(ipForm); // Collect form data
+        const formData = new FormData(ipForm); // Collect form data
 
-            fetch("block_addresses.php", {
-                method: "POST",
-                body: formData,
-            })
-            .then(response => response.text()) // Read response text
-            .then(data => {
-                alert("IPs blocked successfully.");
-                console.log(data); // Optional: Show response for debugging
-                // Optionally update the page without reloading
+        fetch("block_addresses.php", {
+            method: "POST",
+            body: formData,
+        })
+        .then(response => response.text()) // Read response text
+        .then(data => {
+            alert("IPs blocked successfully.");
+            console.log(data); // Optional: Show response for debugging
+            // Optionally update the page without reloading
 
-                // Update the IP list dynamically
-                const ipList = document.getElementById("ip-list");
-                const newIps = formData.get("ip_addresses").split(",");
-                newIps.forEach(ip => {
-                    const newRow = document.createElement("tr");
-                    newRow.id = `ip-row-${ip.trim()}`;
-                    newRow.innerHTML = `
-                        <td><input type='text' value='${ip.trim()}' disabled></td>
-                        <td><button onclick='deleteIp("${ip.trim()}")'>Delete</button></td>
-                    `;
-                    ipList.appendChild(newRow);
-                });
-            })
-            .catch(error => {
-                console.error("Error blocking IPs:", error);
-                alert("Failed to block IPs. Please try again.");
+            // Update the IP list dynamically
+            const ipList = document.getElementById("ip-list");
+            const newIps = formData.get("ip_addresses").split(",").map(ip => ip.trim()).filter(ip => ip);
+            newIps.forEach(ip => {
+                const newRow = document.createElement("tr");
+                newRow.id = `ip-row-${ip}`;
+                newRow.innerHTML = `
+                    <td><input type='text' value='${ip}' disabled></td>
+                    <td><button onclick='deleteIp("${ip}")'>Delete</button></td>
+                `;
+                ipList.appendChild(newRow);
             });
-        });
 
-        // Handle URL blocking form submission
-        urlForm.addEventListener("submit", function (event) {
-            event.preventDefault(); // Prevent the default form submission
-
-            const formData = new FormData(urlForm); // Collect form data
-
-            fetch("block_addresses.php", {
-                method: "POST",
-                body: formData,
-            })
-            .then(response => response.text()) // Read response text
-            .then(data => {
-                alert("URLs blocked successfully.");
-                console.log(data); // Optional: Show response for debugging
-                // Optionally update the page without reloading
-
-                // Update the URL list dynamically
-                const urlList = document.getElementById("url-list");
-                const newUrls = formData.get("urls").split(",");
-                newUrls.forEach(url => {
-                    const newRow = document.createElement("tr");
-                    newRow.id = `url-row-${url.trim()}`;
-                    newRow.innerHTML = `
-                        <td><input type='text' value='${url.trim()}' disabled></td>
-                        <td><button onclick='deleteUrl("${url.trim()}")'>Delete</button></td>
-                    `;
-                    urlList.appendChild(newRow);
-                });
-            })
-            .catch(error => {
-                console.error("Error blocking URLs:", error);
-                alert("Failed to block URLs. Please try again.");
-            });
+            // Handle file upload
+            const ipFile = formData.get("ip_file");
+            if (ipFile && ipFile.size > 0) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const fileContent = e.target.result;
+                    const ipsFromFile = fileContent.split(/\r?\n/).map(ip => ip.trim()).filter(ip => ip);
+                    ipsFromFile.forEach(ip => {
+                        const newRow = document.createElement("tr");
+                        newRow.id = `ip-row-${ip}`;
+                        newRow.innerHTML = `
+                            <td><input type='text' value='${ip}' disabled></td>
+                            <td><button onclick='deleteIp("${ip}")'>Delete</button></td>
+                        `;
+                        ipList.appendChild(newRow);
+                    });
+                };
+                reader.readAsText(ipFile);
+            }
+        })
+        .catch(error => {
+            console.error("Error blocking IPs:", error);
+            alert("Failed to block IPs. Please try again.");
         });
     });
+
+    // Handle URL blocking form submission
+    urlForm.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const formData = new FormData(urlForm); // Collect form data
+
+        fetch("block_addresses.php", {
+            method: "POST",
+            body: formData,
+        })
+        .then(response => response.text()) // Read response text
+        .then(data => {
+            alert("URLs blocked successfully.");
+            console.log(data); // Optional: Show response for debugging
+            // Optionally update the page without reloading
+
+            // Update the URL list dynamically
+            const urlList = document.getElementById("url-list");
+            const newUrls = formData.get("urls").split(",").map(url => url.trim()).filter(url => url);
+            newUrls.forEach(url => {
+                const newRow = document.createElement("tr");
+                newRow.id = `url-row-${url}`;
+                newRow.innerHTML = `
+                    <td><input type='text' value='${url}' disabled></td>
+                    <td><button onclick='deleteUrl("${url}")'>Delete</button></td>
+                `;
+                urlList.appendChild(newRow);
+            });
+
+            // Handle file upload
+            const urlFile = formData.get("url_file");
+            if (urlFile && urlFile.size > 0) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const fileContent = e.target.result;
+                    const urlsFromFile = fileContent.split(/\r?\n/).map(url => url.trim()).filter(url => url);
+                    urlsFromFile.forEach(url => {
+                        const newRow = document.createElement("tr");
+                        newRow.id = `url-row-${url}`;
+                        newRow.innerHTML = `
+                            <td><input type='text' value='${url}' disabled></td>
+                            <td><button onclick='deleteUrl("${url}")'>Delete</button></td>
+                        `;
+                        urlList.appendChild(newRow);
+                    });
+                };
+                reader.readAsText(urlFile);
+            }
+        })
+        .catch(error => {
+            console.error("Error blocking URLs:", error);
+            alert("Failed to block URLs. Please try again.");
+        });
+    });
+    });
+
 </script>
 
 </body>
