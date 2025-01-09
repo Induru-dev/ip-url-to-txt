@@ -5,22 +5,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         save_to_file('ip_addresses.txt', $ip_addresses);
         header("Location: index.php?success=true");
         exit();
-    } elseif (isset($_FILES['ip_file']) && $_FILES['ip_file']['error'] === UPLOAD_ERR_OK) {
+    } elseif(isset($_FILES['ip_file']) && $_FILES['ip_file']['error'] === UPLOAD_ERR_OK) {
         $fileTmpPath = $_FILES['ip_file']['tmp_name'];
         $fileType = mime_content_type($fileTmpPath);
-        
+    
+        // Check for valid file types
         if (in_array($fileType, ['text/plain', 'text/csv'])) {
+            // Read lines from the file
             $lines = file($fileTmpPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            $validIPs = array_filter($lines, function ($line) {
-                return filter_var(trim($line), FILTER_VALIDATE_IP);
-            });
-
-            save_to_file('ip_addresses.txt', implode(',', $validIPs));
-            header("Location: index.php?success=true");
-            exit();
+    
+            // Filter only valid IPs
+            $validIPs = [];
+            foreach ($lines as $line) {
+                $line = trim($line); // Remove whitespace
+                if (filter_var($line, FILTER_VALIDATE_IP)) {
+                    $validIPs[] = $line; // Add valid IPs to the array
+                }
+            }
+    
+            if (!empty($validIPs)) {
+                // Save only valid IPs to the file
+                save_to_file('ip_addresses.txt', implode(',', $validIPs));
+                header("Location: index.php?success=true");
+                exit();
+            } else {
+                // Handle case where no valid IPs were found
+                echo "No valid IPs found in the uploaded file.";
+            }
         } else {
+            // Handle invalid file type
             echo "Invalid file format. Please upload a valid .csv or .txt file.";
-        }
+            }
     } elseif (isset($_POST['urls']) && !empty($_POST['urls'])) {
         $urls = $_POST['urls'];
         save_to_file('urls.txt', $urls);

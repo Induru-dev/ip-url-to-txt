@@ -131,7 +131,7 @@
 
     <div id="ip-tab" class="tab-content active">
     <h2>Block IP Addresses</h2>
-    <form action="block_addresses.php" method="POST" enctype="multipart/form-data">
+    <form id="block-ip-form" action="block_addresses.php" method="POST" enctype="multipart/form-data">
         <label for="ip_addresses">Enter IP Addresses (comma-separated):</label>
         <textarea name="ip_addresses" id="ip_addresses" placeholder="e.g., 192.168.1.1, 203.0.113.5"></textarea>
         <label for="ip_file">Or upload a file (CSV or TXT):</label>
@@ -160,7 +160,7 @@
 
     <div id="url-tab" class="tab-content">
         <h2>Block URLs</h2>
-        <form action="block_addresses.php" method="POST" enctype="multipart/form-data">
+        <form id="block-url-form" action="block_addresses.php" method="POST" enctype="multipart/form-data">
             <label for="urls">Enter URLs (comma-separated):</label>
             <textarea name="urls" id="urls" placeholder="e.g., https://example.com, http://test.com"></textarea>
             <label for="url_file">Or upload a file (CSV or TXT):</label>
@@ -214,16 +214,107 @@
     }
 
     function deleteIp(ip) {
-        if (confirm('Are you sure you want to delete this IP address?')) {
-            window.location.href = "block_addresses.php?delete_ip=" + encodeURIComponent(ip);
-        }
+    if (confirm('Are you sure you want to delete this IP address?')) {
+        // Perform the AJAX request to delete the IP
+        const url = `block_addresses.php?delete_ip=${encodeURIComponent(ip)}`;
+        
+        fetch(url, {
+            method: 'GET',  // Using GET to send the deletion request
+        })
+        .then(response => response.text())
+        .then(data => {
+            // You could display a success message or dynamically update your page here.
+            alert("IP deleted successfully!");
+            console.log(data);  // Log the response (could show a success message)
+
+            // Example: Optionally remove the element from the page (update UI immediately)
+            const ipRow = document.getElementById(`ip-row-${ip}`);
+            if (ipRow) {
+                ipRow.remove();  // Remove the row of IP immediately from the DOM
+            }
+        })
+        .catch(error => {
+            alert("Failed to delete IP. Please try again.");
+            console.error("Error:", error);
+        });
+    }
     }
 
     function deleteUrl(url) {
-        if (confirm('Are you sure you want to delete this URL?')) {
-            window.location.href = "block_addresses.php?delete_url=" + encodeURIComponent(url);
-        }
+    if (confirm('Are you sure you want to delete this URL?')) {
+        // Perform the AJAX request to delete the URL
+        const deleteUrl = `block_addresses.php?delete_url=${encodeURIComponent(url)}`;
+        
+        fetch(deleteUrl, {
+            method: 'GET',  // Using GET to send the deletion request
+        })
+        .then(response => response.text())
+        .then(data => {
+            // You could display a success message or dynamically update your page here.
+            alert("URL deleted successfully!");
+            console.log(data);  // Log the response (could show a success message)
+
+            // Example: Optionally remove the element from the page (update UI immediately)
+            const urlRow = document.getElementById(`url-row-${url}`);
+            if (urlRow) {
+                urlRow.remove();  // Remove the URL row immediately from the DOM
+            }
+        })
+        .catch(error => {
+            alert("Failed to delete URL. Please try again.");
+            console.error("Error:", error);
+        });
     }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const ipForm = document.getElementById("block-ip-form");
+        const urlForm = document.getElementById("block-url-form");
+
+        // Handle IP blocking form submission
+        ipForm.addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const formData = new FormData(ipForm);
+            fetch("block_addresses.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert("IPs blocked successfully.");
+                console.log(data); // Optional: Show response for debugging
+            })
+            .catch(error => {
+                console.error("Error blocking IPs:", error);
+                alert("Failed to block IPs. Please try again.");
+            });
+        });
+
+        // Handle URL blocking form submission
+        urlForm.addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const formData = new FormData(urlForm);
+            fetch("block_addresses.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert("URLs blocked successfully.");
+                console.log(data); // Optional: Show response for debugging
+            })
+            .catch(error => {
+                console.error("Error blocking URLs:", error);
+                alert("Failed to block URLs. Please try again.");
+            });
+        });
+    })
+
+
+
+
 </script>
 
 </body>
