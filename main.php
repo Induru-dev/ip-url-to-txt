@@ -396,5 +396,13 @@ if (!isset($_SESSION['user_id'])) {
 
 </script>
 
+<?php if (!empty($message)): ?>
+        <p class="<?= strpos($message, 'successful') !== false ? 'message' : 'error' ?>"><?= $message ?></p>
+    <?php endif; ?>
+    <!-- Back to Login Button -->
+    <form action="index.php" method="get">
+        <button type="submit">log out</button>
+    </form>
+
 </body>
 </html>

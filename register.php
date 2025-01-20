@@ -48,5 +48,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <p><?= $message ?></p>
         <?php endif; ?>
     </form>
+    
+    <?php if (!empty($message)): ?>
+        <p class="<?= strpos($message, 'successful') !== false ? 'message' : 'error' ?>"><?= $message ?></p>
+    <?php endif; ?>
+    <!-- Back to Login Button -->
+    <form action="index.php" method="get">
+        <button type="submit">Back to Login</button>
+    </form>
+
 </body>
 </html>
