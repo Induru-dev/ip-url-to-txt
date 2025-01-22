@@ -17,7 +17,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
         if (password_verify($password, $user['password'])) {
+
+            
             $_SESSION['user_id'] = $user_id;
+            $_SESSION['username'] = $user['name'];
+
             if (isset($_POST['login'])) {
                 header('Location: main.php');
                 exit();

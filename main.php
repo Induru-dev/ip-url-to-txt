@@ -150,7 +150,7 @@ if (!isset($_SESSION['user_id'])) {
             <h3>Current Blocked IP Addresses:</h3>
             <table id="ip-list">
                 <?php
-                $ip_file = 'ip_addresses.txt';
+                $ip_file = 'ip_users.txt';
                 if (file_exists($ip_file)) {
                     $ips = file($ip_file, FILE_IGNORE_NEW_LINES);
                     foreach ($ips as $ip) {
