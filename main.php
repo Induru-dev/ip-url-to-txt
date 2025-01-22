@@ -192,19 +192,32 @@ if (!isset($_SESSION['user_id'])) {
         <div class="list-container">
             <h3>Current Blocked URLs:</h3>
             <table id="url-list">
+            <thead>
+                <tr>
+                    <th>URL</th>
+                    <th>Username</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
                 <?php
-                $url_file = 'urls.txt';
-                if (file_exists($url_file)) {
-                    $urls = file($url_file, FILE_IGNORE_NEW_LINES);
-                    foreach ($urls as $url) {
+                $url_user_file = 'url_users.txt'; // File containing URLs and usernames
+                if (file_exists($url_user_file)) {
+                    // Read the file line by line
+                    $entries = file($url_user_file, FILE_IGNORE_NEW_LINES);
+                    foreach ($entries as $entry) {
+                        // Split each line by comma to separate URL and username
+                        list($url, $username) = array_map('trim', explode(',', $entry));
                         echo "<tr id=\"url-row-$url\">
                                 <td><input type='text' value='$url' disabled></td>
+                                <td><input type='text' value='$username' disabled></td>
                                 <td><button onclick='deleteUrl(\"$url\")'>Delete</button></td>
                             </tr>";
                     }
                 }
                 ?>
-            </table>
+            </tbody>
+        </table>
         </div>
     </div>
 
