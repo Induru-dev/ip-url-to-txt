@@ -149,18 +149,31 @@ if (!isset($_SESSION['user_id'])) {
         <div class="list-container">
             <h3>Current Blocked IP Addresses:</h3>
             <table id="ip-list">
-                <?php
-                $ip_file = 'ip_users.txt';
-                if (file_exists($ip_file)) {
-                    $ips = file($ip_file, FILE_IGNORE_NEW_LINES);
-                    foreach ($ips as $ip) {
-                        echo "<tr id=\"ip-row-$ip\">
-                                <td><input type='text' value='$ip' disabled></td>
-                                <td><button onclick='deleteIp(\"$ip\")'>Delete</button></td>
-                            </tr>";
+                <thead>
+                    <tr>
+                        <th>IP Address</th>
+                        <th>Username</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $ip_user_file = 'ip_users.txt'; // File containing IPs and usernames
+                    if (file_exists($ip_user_file)) {
+                        // Read the file line by line
+                        $entries = file($ip_user_file, FILE_IGNORE_NEW_LINES);
+                        foreach ($entries as $entry) {
+                            // Split each line by comma to separate IP and username
+                            list($ip, $username) = array_map('trim', explode(',', $entry));
+                            echo "<tr id=\"ip-row-$ip\">
+                                    <td><input type='text' value='$ip' disabled></td>
+                                    <td><input type='text' value='$username' disabled></td>
+                                    <td><button onclick='deleteIp(\"$ip\")'>Delete</button></td>
+                                </tr>";
+                        }
                     }
-                }
-                ?>
+                    ?>
+                </tbody>
             </table>
         </div>
     </div>
