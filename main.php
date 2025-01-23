@@ -4,6 +4,7 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: index.php');
     exit();
 }
+echo $_SESSION['username'] ?? 'unknown_user';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -310,6 +311,7 @@ if (!isset($_SESSION['user_id'])) {
         event.preventDefault(); // Prevent the default form submission
 
         const formData = new FormData(ipForm); // Collect form data
+        
 
         fetch("block_addresses.php", {
             method: "POST",
@@ -324,11 +326,13 @@ if (!isset($_SESSION['user_id'])) {
             // Update the IP list dynamically
             const ipList = document.getElementById("ip-list");
             const newIps = formData.get("ip_addresses").split(",").map(ip => ip.trim()).filter(ip => ip);
+            const username = "<?= $_SESSION['username'] ?? 'unknown_user' ?>";
             newIps.forEach(ip => {
                 const newRow = document.createElement("tr");
                 newRow.id = `ip-row-${ip}`;
                 newRow.innerHTML = `
                     <td><input type='text' value='${ip}' disabled></td>
+                    <td><input type='text' value='${username}' disabled></td>
                     <td><button onclick='deleteIp("${ip}")'>Delete</button></td>
                 `;
                 ipList.appendChild(newRow);
@@ -344,8 +348,10 @@ if (!isset($_SESSION['user_id'])) {
                     ipsFromFile.forEach(ip => {
                         const newRow = document.createElement("tr");
                         newRow.id = `ip-row-${ip}`;
+
                         newRow.innerHTML = `
                             <td><input type='text' value='${ip}' disabled></td>
+                            <td><input type='text' value='${username}' disabled></td>
                             <td><button onclick='deleteIp("${ip}")'>Delete</button></td>
                         `;
                         ipList.appendChild(newRow);
@@ -380,11 +386,13 @@ if (!isset($_SESSION['user_id'])) {
             // Update the URL list dynamically
             const urlList = document.getElementById("url-list");
             const newUrls = formData.get("urls").split(",").map(url => url.trim()).filter(url => url);
+            const username = "<?= $_SESSION['username'] ?? 'unknown_user' ?>";
             newUrls.forEach(url => {
                 const newRow = document.createElement("tr");
                 newRow.id = `url-row-${url}`;
                 newRow.innerHTML = `
                     <td><input type='text' value='${url}' disabled></td>
+                    <td><input type='text' value='${username}' disabled></td>
                     <td><button onclick='deleteUrl("${url}")'>Delete</button></td>
                 `;
                 urlList.appendChild(newRow);
@@ -397,11 +405,13 @@ if (!isset($_SESSION['user_id'])) {
                 reader.onload = function(e) {
                     const fileContent = e.target.result;
                     const urlsFromFile = fileContent.split(/\r?\n/).map(url => url.trim()).filter(url => url);
+                    
                     urlsFromFile.forEach(url => {
                         const newRow = document.createElement("tr");
                         newRow.id = `url-row-${url}`;
                         newRow.innerHTML = `
                             <td><input type='text' value='${url}' disabled></td>
+                            <td><input type='text' value='${username}' disabled></td>
                             <td><button onclick='deleteUrl("${url}")'>Delete</button></td>
                         `;
                         urlList.appendChild(newRow);
