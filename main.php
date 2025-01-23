@@ -4,7 +4,7 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: index.php');
     exit();
 }
-echo $_SESSION['username'] ?? 'unknown_user';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -125,6 +125,19 @@ echo $_SESSION['username'] ?? 'unknown_user';
         .list-container td button:hover {
             background-color: #d32f2f;
         }
+
+        body {
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
     </style>
 </head>
 <body>
@@ -150,7 +163,7 @@ echo $_SESSION['username'] ?? 'unknown_user';
         <div class="list-container">
             <h3>Current Blocked IP Addresses:</h3>
             <table id="ip-list">
-                <thead>
+                <thead>                    
                     <tr>
                         <th>IP Address</th>
                         <th>Username</th>
@@ -177,6 +190,9 @@ echo $_SESSION['username'] ?? 'unknown_user';
                 </tbody>
             </table>
         </div>
+        <form action="logout.php" method="post">
+        <button type="submit">Log Out</button>
+        </form>
     </div>
 
     <div id="url-tab" class="tab-content">
@@ -220,6 +236,11 @@ echo $_SESSION['username'] ?? 'unknown_user';
             </tbody>
         </table>
         </div>
+
+        <form action="logout.php" method="post">
+        <button type="submit">Log Out</button>
+        </form>
+
     </div>
 
     <div class="message">
@@ -229,10 +250,15 @@ echo $_SESSION['username'] ?? 'unknown_user';
         }
         ?>
     </div>
+
+
 </div>
 
 
 <script>
+
+    
+
     function openTab(tabId, event) {
         let tabs = document.querySelectorAll('.tab-content');
         tabs.forEach(function(tab) {
@@ -435,10 +461,7 @@ echo $_SESSION['username'] ?? 'unknown_user';
 <?php if (!empty($message)): ?>
         <p class="<?= strpos($message, 'successful') !== false ? 'message' : 'error' ?>"><?= $message ?></p>
     <?php endif; ?>
-    <!-- Back to Login Button -->
-    <form action="index.php" method="get">
-        <button type="submit">log out</button>
-    </form>
+    
 
 </body>
 </html>
