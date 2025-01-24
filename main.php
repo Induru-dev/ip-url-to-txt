@@ -136,13 +136,36 @@ if (!isset($_SESSION['user_id'])) {
             align-items: center;
         }
 
+        button {
+            background-color: #3f51b5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #FF1F1F; /* Darker red on hover */
+            transform: scale(1.05); /* Slight zoom effect */
+        }
+
 
 
     </style>
 </head>
 <body>
 
+
+
 <div class="container">
+    <form action="logout.php" method="post">
+            <button type="submit">Log Out</button>
+    </form>
+
     <h1>IPGuard</h1>
 
     <div class="tabs">
@@ -190,9 +213,7 @@ if (!isset($_SESSION['user_id'])) {
                 </tbody>
             </table>
         </div>
-        <form action="logout.php" method="post">
-        <button type="submit">Log Out</button>
-        </form>
+        
     </div>
 
     <div id="url-tab" class="tab-content">
@@ -237,9 +258,7 @@ if (!isset($_SESSION['user_id'])) {
         </table>
         </div>
 
-        <form action="logout.php" method="post">
-        <button type="submit">Log Out</button>
-        </form>
+        
 
     </div>
 

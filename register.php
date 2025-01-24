@@ -37,6 +37,131 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Register New User</title>
 </head>
 <body>
+
+    <style>
+                /* General reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc); /* Gradient background */
+            
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            text-align: center;
+        }
+
+        /* Container for the form */
+        form {
+            background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white background */
+            border-radius: 10px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        /* Heading styling */
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 70px;
+            margin-left: 50px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Text shadow */
+        }
+
+        /* Input fields styling */
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            background-color: #f1f1f1;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        /* Input focus effect */
+        input:focus {
+            outline: none;
+            background-color: #e1e1e1;
+            box-shadow: 0 0 10px rgba(38, 194, 129, 0.5); /* Green focus glow */
+        }
+
+        /* Submit button styling */
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #FF4C4C; /* Red background */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* Button hover effect */
+        button:hover {
+            background-color: #FF1F1F;
+            transform: scale(1.05);
+        }
+
+        /* Message styling (successful or error) */
+        .message {
+            color: #38C172;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .error {
+            color: #FF6347;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Back to login button styling */
+        form[action="index.php"] {
+            margin-top: 500px;
+            
+        }
+
+        form[action="index.php"] button {
+            background-color: #2575fc; /* Blue background */
+            font-size: 1rem;
+            padding: 12px;
+            
+        }
+
+        form[action="index.php"] button:hover {
+            background-color: #3c8ce7;
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            form {
+                padding: 30px;
+                width: 90%;
+            }
+
+            input, button {
+                font-size: 1rem;
+            }
+        }
+
+    </style>
     <h1>Register New User</h1>
     <form method="post">
         <input type="text" name="user_id" placeholder="New User ID" required>
