@@ -1,10 +1,1 @@
-192.13.4.5, superadmin
-1.1.1.1, superadmin
-5.5.5.5, superadmin
-7.7.7.7, superadmin
-4.6.7.8, superadmin
-8.8.8.8, superadmin
-1.1.1.1, superadmin
-34.32.32.32, superadmin
-255.255.255.255, superadmin
-192.168.1.1, superadmin
+7.3.2.1, banuka
