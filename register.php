@@ -37,7 +37,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Register New User</title>
 </head>
 <body>
-
     <style>
                 /* General reset */
         * {
@@ -50,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         body {
             font-family: 'Arial', sans-serif;
             background: linear-gradient(to right, #6a11cb, #2575fc); /* Gradient background */
-            
+            display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -70,10 +69,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         /* Heading styling */
         h1 {
+            h1 {
             font-size: 2.5rem;
             margin-bottom: 70px;
-            margin-left: 50px;
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Text shadow */
+            text-align: center; /* Add this line to center the text */
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
         }
 
         /* Input fields styling */
@@ -162,8 +163,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
     </style>
-    <h1>Register New User</h1>
     <form method="post">
+        <h1>Register New User</h1>
+    
         <input type="text" name="user_id" placeholder="New User ID" required>
         <input type="password" name="password" placeholder="New Password" required>
         <input type="text" name="name" placeholder="Full Name" required>
@@ -172,15 +174,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php if ($message): ?>
             <p><?= $message ?></p>
         <?php endif; ?>
+
+        <a href="index.php" style="text-decoration: none;">
+        <button type="button" style="padding: 12px 20px; background-color: #2575fc; color: white; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer; transition: background-color 0.3s ease;">
+            Back to Login
+        </button>
+        </a>
+        
     </form>
     
     <?php if (!empty($message)): ?>
         <p class="<?= strpos($message, 'successful') !== false ? 'message' : 'error' ?>"><?= $message ?></p>
     <?php endif; ?>
-    <!-- Back to Login Button -->
-    <form action="index.php" method="get">
-        <button type="submit">Back to Login</button>
-    </form>
+    
+    
+    
 
 </body>
 </html>
